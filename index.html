@@ -278,6 +278,30 @@
 #final-quiz .rizz-quiz-title {
     color: #4a90e2;
 }
+.google-form-link {
+    display: inline-block;
+    background-color: #4285F4; /* Warna Google blue */
+    color: white;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    margin: 15px 0;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.google-form-link:hover {
+    background-color: #3367D6; /* Google blue yang lebih gelap */
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.small-text {
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+    margin-top: 10px;
+}
 
     </style>
 </head>
@@ -398,7 +422,7 @@
                     alt: 'Sample slide 3'
                 },
                 { 
-                    src: 'n23.png',
+                    src: 'N23.png',
                     alt: 'Sample slide 3'
                 },
                 { 
@@ -557,30 +581,39 @@ nextButton.addEventListener('click', function() {
 
 // Fungsi untuk menangani respon pada quiz terakhir
 // Fungsi untuk menangani respon pada quiz terakhir
+// Fungsi untuk menangani respons final
 function handleFinalResponse(response) {
-    // Menyembunyikan tombol
-    document.querySelector('#final-quiz .rizz-buttons').style.display = 'none';
+    const resultElement = document.getElementById('final-result');
+    resultElement.style.display = 'block';
+    
+    // Sembunyikan tombol setelah dipilih
+    document.querySelector('.rizz-buttons').style.display = 'none';
     
     if (response === 'yes') {
-        // Tampilkan input whatsapp
-        document.getElementById('whatsapp-container').style.display = 'block';
+        // Tampilkan link Google Form alih-alih input form
+        resultElement.innerHTML = `
+            <p>Yeayyy...isi form ini ya untuk meninggalkan nomor kamu:</p>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfqZ2u75NghL-qoEU2v9tjsBZqvbEppI-gLiGGsfT6P5l0znA/viewform?usp=header" 
+               target="_blank" 
+               class="google-form-link">
+                Klik Di Sini Untuk Menuju Form
+            </a>
+            <p class="small-text">*tenang saja, semua jawaban kamu hanya aku yang bisa liat, orang lain tidak bisa :)</p>
+        `;
         
-        // Simpan data jawaban 'yes' ke database
-        saveResponseToDatabase('yes', null);
+        // Jangan tampilkan container WhatsApp karena kita menggantinya dengan link
+        document.getElementById('whatsapp-container').style.display = 'none';
+        
+        // Tampilkan tombol lanjutkan
+        document.getElementById('final-continue').style.display = 'inline-block';
     } else {
         // Tampilkan pesan penolakan
-        const resultElement = document.getElementById('final-result');
-        resultElement.style.display = 'block';
         resultElement.innerHTML = "Baiklah kalau begitu, mungkin kita tidak cocok. terima kasih yaaa";
         
         // Tampilkan tombol lanjutkan
-        document.getElementById('final-continue').style.display = 'block';
-        
-        // Simpan data jawaban 'no' ke database
-        saveResponseToDatabase('no', null);
+        document.getElementById('final-continue').style.display = 'inline-block';
     }
 }
-
 // Fungsi untuk mengirim nomor whatsapp
 function submitWhatsapp() {
     const whatsappNumber = document.getElementById('whatsapp-number').value;
